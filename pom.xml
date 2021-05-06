@@ -59,13 +59,6 @@
 			<artifactId>activemq-spring</artifactId>
 		</dependency>
 
-    <!-- Commons Json -->
-    <dependency>
-      <groupId>com.scoperetail</groupId>
-      <artifactId>commons-json</artifactId>
-      <version>${commons.json.version}</version>
-    </dependency>
-
 		<dependency>
 			<groupId>com.scoperetail.fusion</groupId>
 			<artifactId>fusion-audit-persistence</artifactId>
@@ -79,9 +72,14 @@
 		</dependency>
 
 		<!-- Use MySQL Connector-J -->
+<!--		<dependency>-->
+<!--			<groupId>mysql</groupId>-->
+<!--			<artifactId>mysql-connector-java</artifactId>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.7.2</version>
 		</dependency>
 	</dependencies>
 

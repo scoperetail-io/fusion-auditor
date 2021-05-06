@@ -21,8 +21,11 @@ import org.springframework.jms.support.converter.SimpleMessageConverter;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.scoperetail.al.gif.jms.lib", "com.scoperetail.fusion.auditor"})
 @EntityScan(
-    basePackages = {"com.scoperetail.fusion.audit.persistence", "com.scoperetail.fusion.auditor"})
-@EnableJpaRepositories(basePackages = {"com.scoperetail.fusion.audit.persistence"})
+    basePackages = {
+      "com.scoperetail.fusion.adapter.out.persistence",
+      "com.scoperetail.fusion.auditor"
+    })
+@EnableJpaRepositories(basePackages = {"com.scoperetail.fusion.adapter.out.persistence"})
 @EnableJms
 @Configuration
 public class FusionAuditorApplication extends SpringBootServletInitializer {
