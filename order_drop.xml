@@ -1,0 +1,68 @@
+<PickingSubSystemOrderReleaseMessage xmlns="http://www.xmlns.walmartstores.com/SuppyChain/FulfillmentManagement/GlobalIntegeratedFulfillment/Picking/PickingSubSystemOrderReleaseMessage/1.0/" xmlns:hdr="http://www.xmlns.walmartstores.com/Header/datatypes/MessageHeader/1.4/">
+  <hdr:MessageHeader>
+    <hdr:SubId>SUB-EIC-UPDPICK-V1</hdr:SubId>
+    <hdr:CnsmrId>CON-NODE-UPDPICK-V1</hdr:CnsmrId>
+    <hdr:SrvcNm>UpdateFulfillmentPicking.subSystemOrderRelease</hdr:SrvcNm>
+    <hdr:TranId>347427639327</hdr:TranId>
+    <hdr:Version>1.0</hdr:Version>
+  </hdr:MessageHeader>
+  <MessageBody>
+    <RoutingInfo>
+      <SourceNode>
+        <location>
+          <countryCode>US</countryCode>
+        </location>
+        <nodeID>5505</nodeID>
+      </SourceNode>
+      <DestinationNode>
+        <location>
+          <countryCode>US</countryCode>
+        </location>
+        <nodeID>5505</nodeID>
+      </DestinationNode>
+    </RoutingInfo>
+    <Order>
+      <node>
+        <nodeId>5505</nodeId>
+        <countryCode>US</countryCode>
+      </node>
+      <fulfillmentOrder>
+        <orderNbr>347427639327</orderNbr>
+        <orderPriority>
+          <code>1</code>
+          <description>Grocery Pickup Default</description>
+        </orderPriority>
+        <type code="6" name="GRP"/>
+        <destinationBusinessUnit destBannerName="Walmart Grocery" destDivisonNumber="1"/>
+        <pickDueTime>pickDueTime</pickDueTime>
+        <expectedOrderPickupTime>expectedOrderPickupTime</expectedOrderPickupTime>
+        <earliestPickTime>earliestPickTime</earliestPickTime>
+        <orderSequenceNumber>509</orderSequenceNumber>
+        <loadGroupNumber>34</loadGroupNumber>
+        <carrierBagAllowed>N</carrierBagAllowed>
+        <recordCarrierBagCount>N</recordCarrierBagCount>
+
+        <lines>
+                <line>
+                    <lineNbr>1</lineNbr>
+                    <upc>3867502610</upc>
+                    <qty>1.0</qty>
+                    <weight>0.0</weight>
+                    <pickByType>EACH</pickByType>
+                    <substitutionAllowed>N</substitutionAllowed>
+                    <itemNbr>550490652</itemNbr>
+                    <uom>550490652</uom>
+                </line>
+        </lines>
+      </fulfillmentOrder>
+    </Order>
+
+    <MessageExtensions>
+          <messageExtension>
+              <name>Not available</name>
+              <value>Not available</value>
+          </messageExtension>
+    </MessageExtensions>
+  </MessageBody>
+</PickingSubSystemOrderReleaseMessage>
+
