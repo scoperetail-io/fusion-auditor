@@ -3,18 +3,15 @@ package com.scoperetail.fusion.auditor.listener;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.scoperetail.al.gif.jms.lib.service.ListenerJmsService;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.DedupeKeyEntity;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogKeyEntity;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.DedupeKeyRepository;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogKeyRepository;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogRepository;
-import com.scoperetail.fusion.auditor.dto.DomainEvent;
-import com.scoperetail.fusion.auditor.enums.TaskResult;
 import com.scoperetail.fusion.auditor.mapper.DomainEventMapper;
 import com.scoperetail.fusion.auditor.mapper.JsonUtils;
+import com.scoperetail.fusion.messaging.adapter.in.messaging.jms.TaskResult;
+import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -34,49 +31,28 @@ public class AuditReader implements ListenerJmsService {
   private DomainEventMapper domainEventMapper;
   private MessageLogRepository messageLogRepository;
   private MessageLogKeyRepository messageLogKeyRepository;
-  private DedupeKeyRepository dedupeKeyRepository;
 
   @Override
   @Transactional
   public void process(String message) {
-    log.info("Received message :: [{}]", message);
+    log.info("Received message: [{}]", message);
     TaskResult taskResult = TaskResult.FAILURE;
     try {
       DomainEvent domainEvent =
           JsonUtils.unmarshal(
               Optional.of(message), Optional.of(new TypeReference<DomainEvent>() {}));
-      // If logKey is in database, update the status to duplicate
-      Optional<MessageLogEntity> optMessageLogEntity =
-          messageLogRepository.findByLogKey(domainEvent.getEventId());
-      if (optMessageLogEntity.isPresent()) {
-        optMessageLogEntity.get().setStatusCode(5);
-        messageLogRepository.save(optMessageLogEntity.get());
-        log.info("messageLogEntity successfully updated as duplicate");
-        // TODO: Ask Tushar if this is needed
-        DedupeKeyEntity dedupeKeyEntity =
-            DedupeKeyEntity.builder()
-                .logKey(domainEvent.getEventId())
-                .createTs(LocalDateTime.now())
-                .build();
-        dedupeKeyRepository.save(dedupeKeyEntity);
-        taskResult = TaskResult.DISCARD;
-      } else {
-        MessageLogEntity messageLogEntity = domainEventMapper.getMessageLogEntity(domainEvent);
-        messageLogEntity.setStatusCode(
-            1); // 1:Success, 2:App_error, 3:sys_error, 4:invalid_message, 5:duplicate
-        messageLogRepository.save(messageLogEntity);
-        log.info("messageLogEntity successfully inserted");
-        MessageLogKeyEntity messageLogKeyEntity =
-            getMessageLogKeyEntity(domainEvent.getEventId(), domainEvent.getEventIdKeys());
-        messageLogKeyRepository.save(messageLogKeyEntity);
-        log.info("messageLogKeyEntity successfully inserted");
-        taskResult = TaskResult.SUCCESS;
-      }
+      MessageLogEntity messageLogEntity = domainEventMapper.getMessageLogEntity(domainEvent);
+      messageLogEntity.setStatusCode(
+          1); // 1:Success, 2:App_error, 3:sys_error, 4:invalid_message, 5:duplicate
+      messageLogRepository.save(messageLogEntity);
+      log.info("messageLogEntity successfully inserted");
+      MessageLogKeyEntity messageLogKeyEntity =
+          getMessageLogKeyEntity(domainEvent.getEventId(), domainEvent.getKeyMap());
+      messageLogKeyRepository.save(messageLogKeyEntity);
+      log.info("messageLogKeyEntity successfully inserted");
+      taskResult = TaskResult.SUCCESS;
     } catch (IOException e) {
-      log.error("Data Exception :: ", e);
-      taskResult = TaskResult.DISCARD;
-    } catch (Exception e) {
-      log.error("General Exception {}, {}", message, e);
+      log.error("Invalid Message: ", e);
       taskResult = TaskResult.DISCARD;
     }
   }
@@ -84,15 +60,16 @@ public class AuditReader implements ListenerJmsService {
   private MessageLogKeyEntity getMessageLogKeyEntity(String logKey, Map<String, String> keys) {
     MessageLogKeyEntity msgLogKey = new MessageLogKeyEntity();
     msgLogKey.setLogKey(logKey);
-    keys.forEach((k, v) -> loadMsgKey(msgLogKey, k, v));
-    return msgLogKey;
-  }
 
-  private void loadMsgKey(MessageLogKeyEntity entity, String key, String value) {
-    if (key.equalsIgnoreCase(K01)) entity.setK01(value);
-    else if (key.equalsIgnoreCase(K02)) entity.setK02(value);
-    else if (key.equalsIgnoreCase(K03)) entity.setK03(value);
-    else if (key.equalsIgnoreCase(K04)) entity.setK04(value);
-    else if (key.equalsIgnoreCase(K05)) entity.setK05(value);
+    int i = 1;
+    for (Map.Entry<String, String> entry : keys.entrySet()) {
+      if (i == 1) msgLogKey.setK01(entry.getValue());
+      else if (i == 2) msgLogKey.setK02(entry.getValue());
+      else if (i == 3) msgLogKey.setK03(entry.getValue());
+      else if (i == 4) msgLogKey.setK04(entry.getValue());
+      else if (i == 5) msgLogKey.setK05(entry.getValue());
+      i++;
+    }
+    return msgLogKey;
   }
 }

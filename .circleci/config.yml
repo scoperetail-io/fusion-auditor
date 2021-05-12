@@ -1,7 +1,6 @@
 # Java Maven CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
-#
 
 jobs:
   build:
@@ -19,31 +18,12 @@ jobs:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
-      
+
 
     steps:
       - checkout
-      
-      #Review if the comment has valid ticket
-      - run: 
-          name: Review commits comments
-          command: |
-                if [[ "$CIRCLE_BRANCH" != "main" ]]
-                then
-                    text=`git log $CIRCLE_BRANCH --not origin/main --pretty=oneline --no-merges`
-                    while read -r line; do
-                        output=`echo $line|grep -i "al-[0-9]\|[skip ci]"`
-                        if [[ $output ]]
-                        then
-                            echo "" > /dev/null
-                        else
-                            echo $line
-                            echo "No Jira id found for atleast one of the commits"
-                            exit 1
-                        fi
-                    done <<< "$text"
-                fi
 
+      #Review if the comment has valid ticket
       # Download and cache dependencies (Test and Sonar Scan)
       - restore_cache:
           keys:
@@ -51,36 +31,42 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run:        
+      - run:
           name: Test and Sonar Scan
-          command: | 
-                if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "main" ]]; then
-                  mvn clean package sonar:sonar -s .circleci/.circleci.settings.xml
-                fi
+          command: |
+            if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "main" ]]; then
+              mvn clean package sonar:sonar -s .circleci/.circleci.settings.xml
+            fi
       # Deploy!
       - run:
           name: Deploy SNAPSHOT
           command:  |
-                if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "main" ]]; then
-                  mvn -s .circleci/.circleci.settings.xml -DskipTests deploy
-                fi
-                  
+            if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "main" ]]; then
+              mvn -s .circleci/.circleci.settings.xml -DskipTests deploy
+            fi
+
       #Maven Release
       - run:
           name: Perform Maven Release
           command:  |
-                if [[ "$CIRCLE_BRANCH" = "main" ]]
-                then
-                        git config --global user.email "tushar.agrawal@scoperetail.com"
-                        git config --global user.name "scoperetail2"
-                        RELEASE="Yes"
-                        ADDITIONAL_PARAMS="--set-upstream origin $CIRCLE_BRANCH"
-                        mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true
-                        mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true
-                fi
+            if [[ "$CIRCLE_BRANCH" = "main" ]]
+            then
+                    git config --global user.email "tushar.agrawal@scoperetail.com"
+                    git config --global user.name "scoperetail"
+                    RELEASE="Yes"
+                    ADDITIONAL_PARAMS="--set-upstream origin $CIRCLE_BRANCH"
+                    mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true
+
+                    mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true
+            fi
       #Save Cache
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
+workflows:
+  version: 2
+  build_in_server:
+    jobs:
+      - build
