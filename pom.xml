@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>com.scoperetail.fusion.auditor</groupId>
+	<groupId>com.scoperetail.fusion</groupId>
 	<artifactId>fusion-auditor</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<name>fusion-auditor</name>
