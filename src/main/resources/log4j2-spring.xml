@@ -2,7 +2,7 @@
 <Configuration monitorInterval="60">
     <Properties>
         <Property name="file-name-prefix">fusion-auditor</Property>
-        <Property name="log-path">/appl/spool/wl_apps/logs/fusion/</Property>
+        <Property name="log-path">/tmp/fusion/</Property>
 
         <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
         <Property name="LOG_LEVEL_PATTERN">%5p</Property>
