@@ -6,12 +6,14 @@ import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.time.LocalDateTime;
+
 @Mapper(componentModel = "spring")
 public interface DomainEventMapper {
   @Mapping(target = "logKey", source = "event.eventId")
   @Mapping(target = "eventId", source = "event.event")
   @Mapping(target = "sourceTs", source = "event.timestamp")
   @Mapping(target = "payload", source = "event.payload")
-  @Mapping(target = "createTs", source = "event.timestamp")
-  MessageLogEntity getMessageLogEntity(DomainEvent event);
+  @Mapping(target = "createTs", source = "now")
+  MessageLogEntity getMessageLogEntity(DomainEvent event, LocalDateTime now);
 }

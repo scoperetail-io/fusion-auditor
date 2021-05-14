@@ -2,16 +2,17 @@
 package com.scoperetail.fusion.auditor.listener;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.scoperetail.al.gif.jms.lib.service.ListenerJmsService;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogKeyEntity;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogKeyRepository;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogRepository;
 import com.scoperetail.fusion.auditor.mapper.DomainEventMapper;
 import com.scoperetail.fusion.auditor.mapper.JsonUtils;
+import com.scoperetail.fusion.jms.service.ListenerJmsService;
 import com.scoperetail.fusion.messaging.adapter.in.messaging.jms.TaskResult;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -23,11 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("auditReader")
 @AllArgsConstructor
 public class AuditReader implements ListenerJmsService {
-  private static final String K01 = "k01";
-  private static final String K02 = "k02";
-  private static final String K03 = "k03";
-  private static final String K04 = "k04";
-  private static final String K05 = "k05";
   private DomainEventMapper domainEventMapper;
   private MessageLogRepository messageLogRepository;
   private MessageLogKeyRepository messageLogKeyRepository;
@@ -38,10 +34,11 @@ public class AuditReader implements ListenerJmsService {
     log.info("Received message: [{}]", message);
     TaskResult taskResult = TaskResult.FAILURE;
     try {
+      LocalDateTime ldt = LocalDateTime.now();
       DomainEvent domainEvent =
           JsonUtils.unmarshal(
               Optional.of(message), Optional.of(new TypeReference<DomainEvent>() {}));
-      MessageLogEntity messageLogEntity = domainEventMapper.getMessageLogEntity(domainEvent);
+      MessageLogEntity messageLogEntity = domainEventMapper.getMessageLogEntity(domainEvent, ldt);
       messageLogEntity.setStatusCode(
           1); // 1:Success, 2:App_error, 3:sys_error, 4:invalid_message, 5:duplicate
       messageLogRepository.save(messageLogEntity);

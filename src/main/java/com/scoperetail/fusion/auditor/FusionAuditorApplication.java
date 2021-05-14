@@ -19,7 +19,7 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.SimpleMessageConverter;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.scoperetail.al.gif.jms.lib", "com.scoperetail.fusion.auditor"})
+@ComponentScan(basePackages = {"com.scoperetail.fusion.jms", "com.scoperetail.fusion.auditor"})
 @EntityScan(
     basePackages = {
       "com.scoperetail.fusion.adapter.out.persistence",
