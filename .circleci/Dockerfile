@@ -13,6 +13,6 @@ COPY --from=builder internal-dependencies/ /app
 COPY --from=builder spring-boot-loader/ /app
 COPY --from=builder application/ /app
 RUN chown -R fusion:fusion /app && chmod -R 777 /app
-RUN chown -R fusion:fusion /tmp/fusion && chmod -R 777 /app
+RUN chown -R fusion:fusion /tmp/fusion && chmod -R 777 /tmp/fusion
 # ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
 CMD ["/bin/sh", "-c", "java -cp /app -Dspring.profiles.active=${SPRING_PROFILE_ACTIVE} org.springframework.boot.loader.JarLauncher"]
