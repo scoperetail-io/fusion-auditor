@@ -2,13 +2,13 @@
 package com.scoperetail.fusion.auditor.listener;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.scoperetail.al.gif.jms.lib.service.ListenerJmsService;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogKeyEntity;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogKeyRepository;
 import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogRepository;
 import com.scoperetail.fusion.auditor.mapper.DomainEventMapper;
 import com.scoperetail.fusion.auditor.mapper.JsonUtils;
+import com.scoperetail.fusion.jms.service.ListenerJmsService;
 import com.scoperetail.fusion.messaging.adapter.in.messaging.jms.TaskResult;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
 import java.io.IOException;
