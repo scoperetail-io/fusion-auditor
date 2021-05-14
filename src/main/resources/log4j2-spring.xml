@@ -25,24 +25,9 @@
                         <IfFileName glob="${file-name-prefix}-*.log" />
                         <IfLastModified age="7d" />
                 </Delete>
-			</DefaultRolloverStrategy>
-        </RollingFile>
-        <RollingFile name="DB-File-Appender" fileName="${sys:log-path}/hbm-fusion-auditor.log"
-                     filePattern="${log-path}/hbm-fusion-auditor-%d{yyyy-MM-dd}-%i.log">
-            <PatternLayout>
-                <pattern>${FILE_LOG_PATTERN}</pattern>
-            </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="2 MB"/>
-            </Policies>
-            <DefaultRolloverStrategy>
-                <Delete basePath="${log-path}">
-                    <IfFileName glob="hbm-fusion-auditor*.log" />
-                    <IfLastModified age="7d" />
-                </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
-	<Console name="App-Console-Appender" target="SYSTEM_OUT">
+        <Console name="App-Console-Appender" target="SYSTEM_OUT">
             <PatternLayout>
                 <Pattern>${FILE_LOG_PATTERN}</Pattern>
             </PatternLayout>
@@ -54,11 +39,11 @@
             <AppenderRef ref="App-Console-Appender"/>
         </Logger>
         <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
-            <AppenderRef ref="DB-File-Appender"/>
+            <AppenderRef ref="App-File-Appender"/>
             <AppenderRef ref="App-Console-Appender"/>
         </Logger>
         <Logger name="net.ttddyy.dsproxy" level="INFO" additivity="false">
-            <AppenderRef ref="DB-File-Appender"/>
+            <AppenderRef ref="App-File-Appender"/>
             <AppenderRef ref="App-Console-Appender"/>
         </Logger>
         <Root level="ERROR">
