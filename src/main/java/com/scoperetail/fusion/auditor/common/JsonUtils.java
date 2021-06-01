@@ -1,5 +1,5 @@
 /* ScopeRetail (C)2021 */
-package com.scoperetail.fusion.auditor.mapper;
+package com.scoperetail.fusion.auditor.common;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 

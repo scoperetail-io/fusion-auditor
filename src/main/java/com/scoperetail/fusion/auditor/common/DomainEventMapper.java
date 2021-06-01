@@ -1,12 +1,11 @@
 /* ScopeRetail (C)2021 */
-package com.scoperetail.fusion.auditor.mapper;
+package com.scoperetail.fusion.auditor.common;
 
 import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
+import java.time.LocalDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring")
 public interface DomainEventMapper {
