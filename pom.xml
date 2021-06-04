@@ -17,9 +17,10 @@
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sonar.host.url>http://dev-ops.eastus2.cloudapp.azure.com/sonar/</sonar.host.url>
-		<sonar.login>scoperetail</sonar.login>
-		<sonar.password>scope2020!</sonar.password>
+		<sonar.projectKey>scoperetail-io_fusion-auditor</sonar.projectKey> 
+        <sonar.organization>scoperetail-io</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<license-maven-plugin.version>2.0.0</license-maven-plugin.version>
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.language>java</sonar.language>
@@ -147,7 +148,7 @@
 				<version>2.5.3</version>
 				<configuration>
 					<scmCommentPrefix>[skip ci]</scmCommentPrefix>
-				</configuration>
+					</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -173,7 +174,8 @@
 				<artifactId>spotless-maven-plugin</artifactId>
 				<version>${spotless.version}</version>
 				<configuration>
-					<!-- optional: limit format enforcement to just the files changed by this feature branch -->
+					<!-- optional: limit format enforcement to just the files changed by 
+						this feature branch -->
 					<ratchetFrom>origin/main</ratchetFrom>
 					<formats>
 						<!-- you can define as many formats as you want, each is independent -->
@@ -194,7 +196,8 @@
 					</formats>
 					<!-- define a language-specific format -->
 					<java>
-						<!-- no need to specify files, inferred automatically, but you can if you want -->
+						<!-- no need to specify files, inferred automatically, but you can 
+							if you want -->
 
 						<!-- apply a specific flavor of google-java-format -->
 						<googleJavaFormat>
@@ -202,9 +205,9 @@
 							<style>GOOGLE</style>
 						</googleJavaFormat>
 
-						<!-- make sure every file has the following copyright header.
-              optionally, Spotless can set copyright years by digging
-              through git history (see "license" section below) -->
+						<!-- make sure every file has the following copyright header. optionally, 
+							Spotless can set copyright years by digging through git history (see "license" 
+							section below) -->
 						<licenseHeader>
 							<content>/* ScopeRetail (C)$YEAR */</content>  <!-- or <file>${basedir}/license-header</file> -->
 						</licenseHeader>
@@ -212,71 +215,92 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>${license-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+				</executions>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
-					<release>11</release>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${org.mapstruct.version}</version>
-						</path>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-					</annotationProcessorPaths>
+					<verbose>false</verbose>
+					<licenseName>apache_v2</licenseName>
+					<organizationName>Scope Retail Systems Inc.</organizationName>
+					<projectName>${project.name}</projectName>
+					<inceptionYear>2018</inceptionYear>
+					<processStartTag>*****</processStartTag>
+					<sectionDelimiter>-----</sectionDelimiter>
+					<processEndTag>=====</processEndTag>
+					<roots>
+						<root>src/main/java</root>
+						<root>src/test/java</root>
+					</roots>
+					<extraExtensions>
+						<tsx>java</tsx>
+					</extraExtensions>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>central</id>
-			<name>scope-artifactory-virtual</name>
-			<url>http://scopeartifactory.centralus.cloudapp.azure.com/artifactory/maven-virtual</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>maven-central</id>
-			<name>maven</name>
-			<url>https://repo.maven.apache.org/maven2/</url>
-		</repository>
-		<repository>
-			<id>jcenter-central</id>
-			<name>bintray-plugins</name>
-			<url>https://jcenter.bintray.com</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
 	<distributionManagement>
-		<repository>
-			<id>central</id>
-			<name>scope-artifactory-releases</name>
-			<url>http://scopeartifactory.centralus.cloudapp.azure.com/artifactory/maven-release</url>
-		</repository>
 		<snapshotRepository>
-			<id>snapshots</id>
-			<name>scope-artifactory-snapshots</name>
-			<url>http://scopeartifactory.centralus.cloudapp.azure.com/artifactory/maven-snapshots</url>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
