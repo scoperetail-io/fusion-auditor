@@ -70,3 +70,25 @@ workflows:
   build_in_server:
     jobs:
       - build
+  build-and-test:
+    jobs:
+      - marvel/maven-deploy:
+          context:
+            - SLACK
+            - ARTIFACTORY
+          filters:
+            branches:
+              ignore:
+                - master
+                - /HOTFIX-.*/
+      - marvel/docker-publish:
+          context:
+            - OSSRH
+            - SLACK
+            - ARTIFACTORY
+            - DOCKER_SCOPERETAIL
+          filters:
+            branches:
+              only:
+                - master
+                - /HOTFIX-.*/
