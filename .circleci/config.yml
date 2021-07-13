@@ -34,14 +34,14 @@ jobs:
       - run:
           name: Test and Sonar Scan
           command: |
-            if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "master" ]]; then
+            if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "master" ] || [ -z "$RELEASE" && "${CIRCLE_BRANCH}" != *"HOTFIX-"* ]]; then
               mvn clean package sonar:sonar -s .circleci/.circleci.settings.xml
             fi
       # Deploy!
       - run:
           name: Deploy SNAPSHOT
           command:  |
-            if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "master" ]]; then
+            if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "master" ] || [ -z "$RELEASE" && "${CIRCLE_BRANCH}" != *"HOTFIX-"* ]]; then
               mvn -s .circleci/.circleci.settings.xml -DskipTests deploy
             fi
 
@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Perform Maven Release
           command:  |
-            if [[ "$CIRCLE_BRANCH" = "master" ]]
+            if [[ "$CIRCLE_BRANCH" = "master" || "$CIRCLE_BRANCH" == *"HOTFIX-"* ]]
             then
                     git config --global user.email "tushar.agrawal@scoperetail.com"
                     git config --global user.name "scoperetail"
