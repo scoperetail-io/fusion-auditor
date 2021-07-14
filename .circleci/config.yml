@@ -47,10 +47,10 @@ commands:
             git config --global user.name $GITHUB_USER_NAME
             RELEASE="Yes"
             ADDITIONAL_PARAMS="--set-upstream origin $CIRCLE_BRANCH"
-            mvn -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true
+            mvn -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true -s .circleci/.maven.xml
             mvn help:evaluate -Dexpression=project.name -q -DforceStdout > app.txt
             ls target/*.jar | grep -Eo "[[:digit:]]+.[[:digit:]]+" > version.txt
-            mvn -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true
+            mvn -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true -s .circleci/.maven.xml
             
             
   mvn_sonar:
