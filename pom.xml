@@ -10,7 +10,7 @@
 
 	<groupId>com.scoperetail.fusion</groupId>
 	<artifactId>fusion-auditor</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9</version>
 	<name>fusion-auditor</name>
 	<description>Audit messages</description>
 	<url>https://github.com/scoperetail-io/fusion-auditor</url>
@@ -35,7 +35,7 @@
 
 	<scm>
 		<connection>scm:git:git@github.com:scoperetail-io/fusion-auditor.git</connection>
-		<tag>HEAD</tag>
+		<tag>fusion-auditor-0.9</tag>
 		<url>https://github.com/scoperetail-io/fusion-auditor</url>
 	</scm>
 
