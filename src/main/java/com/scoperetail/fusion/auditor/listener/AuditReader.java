@@ -1,15 +1,33 @@
-/* ScopeRetail (C)2021 */
 package com.scoperetail.fusion.auditor.listener;
 
+/*-
+ * *****
+ * fusion-auditor
+ * -----
+ * Copyright (C) 2018 - 2021 Scope Retail Systems Inc.
+ * -----
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =====
+ */
+
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogKeyEntity;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogKeyRepository;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogRepository;
+import com.scoperetail.fusion.audit.persistence.entity.MessageLogEntity;
+import com.scoperetail.fusion.audit.persistence.entity.MessageLogKeyEntity;
+import com.scoperetail.fusion.audit.persistence.repository.MessageLogKeyRepository;
+import com.scoperetail.fusion.audit.persistence.repository.MessageLogRepository;
 import com.scoperetail.fusion.auditor.mapper.DomainEventMapper;
 import com.scoperetail.fusion.auditor.mapper.JsonUtils;
 import com.scoperetail.fusion.jms.service.ListenerJmsService;
-import com.scoperetail.fusion.messaging.adapter.in.messaging.jms.TaskResult;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -70,3 +88,7 @@ public class AuditReader implements ListenerJmsService {
     return msgLogKey;
   }
 }
+enum TaskResult {
+  SUCCESS, FAILURE, DISCARD;
+}
+
