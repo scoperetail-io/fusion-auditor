@@ -44,7 +44,6 @@ jobs:
             if [[ -z "$RELEASE" && "${CIRCLE_BRANCH}" != "master" ]]; then
               mvn -s .circleci/.circleci.settings.xml -DskipTests deploy
             fi
-
       #Maven Release
       - run:
           name: Perform Maven Release
@@ -58,7 +57,6 @@ jobs:
                     mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true -s .circleci/.circleci.settings.xml
                     mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true -s .circleci/.circleci.settings.xml
             fi
-
       #Save Cache
       - save_cache:
           paths:
