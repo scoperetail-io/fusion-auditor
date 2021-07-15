@@ -1,10 +1,10 @@
 /* ScopeRetail (C)2021 */
 package com.scoperetail.fusion.auditor.adapter.out.persistence.jpa;
 
-import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogKeyEntity;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogKeyRepository;
-import com.scoperetail.fusion.adapter.out.persistence.jpa.repository.MessageLogRepository;
+import com.scoperetail.fusion.audit.persistence.entity.MessageLogEntity;
+import com.scoperetail.fusion.audit.persistence.entity.MessageLogKeyEntity;
+import com.scoperetail.fusion.audit.persistence.repository.MessageLogKeyRepository;
+import com.scoperetail.fusion.audit.persistence.repository.MessageLogRepository;
 import com.scoperetail.fusion.auditor.application.port.out.persistence.AuditorOutboundPort;
 import com.scoperetail.fusion.auditor.common.DomainEventMapper;
 import com.scoperetail.fusion.shared.kernel.common.annotation.PersistenceAdapter;

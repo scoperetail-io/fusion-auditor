@@ -8,7 +8,7 @@ import static java.util.Optional.ofNullable;
 import com.scoperetail.fusion.messaging.adapter.in.messaging.jms.MessageListener;
 import com.scoperetail.fusion.messaging.adapter.in.messaging.jms.TaskResult;
 import com.scoperetail.fusion.messaging.adapter.out.messaging.jms.MessageRouterReceiver;
-import com.scoperetail.fusion.messaging.schema.util.JaxbUtil;
+import com.scoperetail.fusion.auditor.common.JaxbUtil;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilder;

@@ -26,11 +26,10 @@
 		<spotless.version>2.10.0</spotless.version>
 		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<jackson.dataformat.version>2.9.8</jackson.dataformat.version>
-		<fusion-shared-kernel.version>0.2</fusion-shared-kernel.version>
-		<fusion-messaging.version>0.4</fusion-messaging.version>
-		<fusion-audit-persistence.version>0.5</fusion-audit-persistence.version>
-		<fusion-messaging-schema.version>0.6</fusion-messaging-schema.version>
-		<fusion-messaging-activemq.version>0.1</fusion-messaging-activemq.version>
+		<fusion-shared-kernel.version>0.6</fusion-shared-kernel.version>
+		<fusion-messaging.version>0.8</fusion-messaging.version>
+		<fusion-audit-persistence.version>0.8</fusion-audit-persistence.version>
+		<fusion-messaging-activemq.version>0.5</fusion-messaging-activemq.version>
 	</properties>
 
 	<scm>
@@ -72,12 +71,6 @@
 			<groupId>com.scoperetail.fusion</groupId>
 			<artifactId>fusion-audit-persistence</artifactId>
 			<version>${fusion-audit-persistence.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.scoperetail.fusion</groupId>
-			<artifactId>fusion-messaging-schema</artifactId>
-			<version>${fusion-messaging-schema.version}</version>
 		</dependency>
 
 		<dependency>
@@ -126,6 +119,18 @@
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 			<version>${jackson.dataformat.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.14</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.26</version>
 		</dependency>
 	</dependencies>
 

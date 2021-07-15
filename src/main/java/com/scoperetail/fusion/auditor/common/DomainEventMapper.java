@@ -1,7 +1,7 @@
 /* ScopeRetail (C)2021 */
 package com.scoperetail.fusion.auditor.common;
 
-import com.scoperetail.fusion.adapter.out.persistence.jpa.entity.MessageLogEntity;
+import com.scoperetail.fusion.audit.persistence.entity.MessageLogEntity;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
 import java.time.LocalDateTime;
 import org.mapstruct.Mapper;
