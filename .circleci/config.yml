@@ -55,9 +55,9 @@ jobs:
                     git config --global user.name "scoperetail"
                     RELEASE="Yes"
                     ADDITIONAL_PARAMS="--set-upstream origin $CIRCLE_BRANCH"
-                    mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true
+                    mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:prepare -Dmaven.test.skip=true -s .circleci/.circleci.settings.xml
 
-                    mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true
+                    mvn -s .circleci/.circleci.settings.xml -Darguments="-DskipTests" -B release:perform -Dmaven.test.skip=true -s .circleci/.circleci.settings.xml
             fi
 
       # build and push Docker image
