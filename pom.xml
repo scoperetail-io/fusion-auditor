@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -26,10 +28,8 @@
 		<spotless.version>2.10.0</spotless.version>
 		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<jackson.dataformat.version>2.9.8</jackson.dataformat.version>
-		<fusion-shared-kernel.version>0.6</fusion-shared-kernel.version>
-		<fusion-messaging.version>0.8</fusion-messaging.version>
-		<fusion-audit-persistence.version>0.8</fusion-audit-persistence.version>
-		<fusion-messaging-activemq.version>0.5</fusion-messaging-activemq.version>
+		<fusion-core.version>0.9</fusion-core.version>
+		<lombok.version>1.18.12</lombok.version>
 	</properties>
 
 	<scm>
@@ -41,6 +41,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.scoperetail.fusion</groupId>
+			<artifactId>fusion-core</artifactId>
+			<version>${fusion-core.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
@@ -50,87 +55,21 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-spring</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.scoperetail.fusion</groupId>
-			<artifactId>fusion-audit-persistence</artifactId>
-			<version>${fusion-audit-persistence.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.scoperetail.fusion</groupId>
-			<artifactId>fusion-messaging</artifactId>
-			<version>${fusion-messaging.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.scoperetail.fusion</groupId>
-			<artifactId>fusion-shared-kernel</artifactId>
-			<version>${fusion-shared-kernel.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.scoperetail.fusion</groupId>
-			<artifactId>fusion-messaging-activemq</artifactId>
-			<version>${fusion-messaging-activemq.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${org.mapstruct.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>2.7.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-freemarker</artifactId>
-			<version>2.4.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>${jackson.dataformat.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.14</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.26</version>
 		</dependency>
 	</dependencies>
 
@@ -178,7 +117,8 @@
 				<artifactId>spotless-maven-plugin</artifactId>
 				<version>${spotless.version}</version>
 				<configuration>
-					<!-- optional: limit format enforcement to just the files changed by this feature branch -->
+					<!-- optional: limit format enforcement to just the files changed by 
+						this feature branch -->
 					<ratchetFrom>origin/master</ratchetFrom>
 					<formats>
 						<!-- you can define as many formats as you want, each is independent -->
@@ -199,7 +139,8 @@
 					</formats>
 					<!-- define a language-specific format -->
 					<java>
-						<!-- no need to specify files, inferred automatically, but you can if you want -->
+						<!-- no need to specify files, inferred automatically, but you can 
+							if you want -->
 
 						<!-- apply a specific flavor of google-java-format -->
 						<googleJavaFormat>
@@ -207,9 +148,9 @@
 							<style>GOOGLE</style>
 						</googleJavaFormat>
 
-						<!-- make sure every file has the following copyright header.
-              optionally, Spotless can set copyright years by digging
-              through git history (see "license" section below) -->
+						<!-- make sure every file has the following copyright header. optionally, 
+							Spotless can set copyright years by digging through git history (see "license" 
+							section below) -->
 						<licenseHeader>
 							<content>/* ScopeRetail (C)$YEAR */</content>  <!-- or <file>${basedir}/license-header</file> -->
 						</licenseHeader>
