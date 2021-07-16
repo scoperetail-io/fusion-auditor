@@ -1,10 +1,11 @@
 /* ScopeRetail (C)2021 */
 package com.scoperetail.fusion.auditor.adapter.in.messaging.jms;
 
+import org.springframework.stereotype.Component;
 import com.scoperetail.fusion.auditor.application.port.in.command.create.AuditorReaderUseCase;
+import com.scoperetail.fusion.core.adapter.in.messaging.jms.AbstractMessageListener;
 import com.scoperetail.fusion.messaging.adapter.out.messaging.jms.MessageRouterReceiver;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
-import org.springframework.stereotype.Component;
 
 @Component
 public class AuditorReaderTaskHandler extends AbstractMessageListener {
@@ -19,7 +20,7 @@ public class AuditorReaderTaskHandler extends AbstractMessageListener {
   }
 
   @Override
-  protected void handleMessage(Object event, boolean isValid) throws Exception {
+  protected void handleMessage(final Object event, final boolean isValid) throws Exception {
     auditorReaderUseCase.readAuditor(event, isValid);
   }
 

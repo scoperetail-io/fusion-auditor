@@ -1,6 +1,8 @@
 /* ScopeRetail (C)2021 */
 package com.scoperetail.fusion.auditor.adapter.out.persistence.jpa;
 
+import java.time.LocalDateTime;
+import java.util.Map;
 import com.scoperetail.fusion.audit.persistence.entity.MessageLogEntity;
 import com.scoperetail.fusion.audit.persistence.entity.MessageLogKeyEntity;
 import com.scoperetail.fusion.audit.persistence.repository.MessageLogKeyRepository;
@@ -9,8 +11,6 @@ import com.scoperetail.fusion.auditor.application.port.out.persistence.AuditorOu
 import com.scoperetail.fusion.auditor.common.DomainEventMapper;
 import com.scoperetail.fusion.shared.kernel.common.annotation.PersistenceAdapter;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
-import java.time.LocalDateTime;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,24 +23,26 @@ public class AuditorPersistenceAdapterJpa implements AuditorOutboundPort {
   private final DomainEventMapper domainEventMapper;
 
   @Override
-  public void insertEventMsgLogAndMsgKey(DomainEvent domainEvent) {
-    LocalDateTime ldt = LocalDateTime.now();
-    MessageLogEntity messageLogEntity = domainEventMapper.getMessageLogEntity(domainEvent, ldt);
+  public void insertEventMsgLogAndMsgKey(final DomainEvent domainEvent) {
+    final LocalDateTime ldt = LocalDateTime.now();
+    final MessageLogEntity messageLogEntity =
+        domainEventMapper.getMessageLogEntity(domainEvent, ldt);
     messageLogEntity.setStatusCode(1);
     messageLogRepository.save(messageLogEntity);
-    log.info("messageLogEntity successfully inserted");
-    MessageLogKeyEntity messageLogKeyEntity =
+    log.debug("MessageLogEntity successfully inserted: {}", messageLogEntity);
+    final MessageLogKeyEntity messageLogKeyEntity =
         getMessageLogKeyEntity(domainEvent.getEventId(), domainEvent.getKeyMap());
     messageLogKeyRepository.save(messageLogKeyEntity);
-    log.info("messageLogKeyEntity successfully inserted");
+    log.debug("MessageLogKeyEntity successfully inserted: {}", messageLogKeyEntity);
   }
 
-  private MessageLogKeyEntity getMessageLogKeyEntity(String logKey, Map<String, String> keys) {
-    MessageLogKeyEntity msgLogKey = new MessageLogKeyEntity();
+  private MessageLogKeyEntity getMessageLogKeyEntity(
+      final String logKey, final Map<String, String> keys) {
+    final MessageLogKeyEntity msgLogKey = new MessageLogKeyEntity();
     msgLogKey.setLogKey(logKey);
 
     int i = 1;
-    for (Map.Entry<String, String> entry : keys.entrySet()) {
+    for (final Map.Entry<String, String> entry : keys.entrySet()) {
       if (i == 1) msgLogKey.setK01(entry.getValue());
       else if (i == 2) msgLogKey.setK02(entry.getValue());
       else if (i == 3) msgLogKey.setK03(entry.getValue());
