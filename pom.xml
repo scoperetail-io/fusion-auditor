@@ -26,8 +26,9 @@
 		<spotless.version>2.10.0</spotless.version>
 		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<jackson.dataformat.version>2.9.8</jackson.dataformat.version>
-		<fusion-core.version>0.9</fusion-core.version>
+		<fusion-core.version>0.12</fusion-core.version>
 		<lombok.version>1.18.12</lombok.version>
+		<eraser.version>0.4</eraser.version>
 	</properties>
 
 	<scm>
@@ -68,6 +69,11 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.scoperetail</groupId>
+			<artifactId>eraser</artifactId>
+			<version>${eraser.version}</version>
 		</dependency>
 	</dependencies>
 
