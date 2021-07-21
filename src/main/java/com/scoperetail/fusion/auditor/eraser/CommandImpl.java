@@ -9,18 +9,18 @@ import com.scoperetail.fusion.audit.persistence.repository.DedupeKeyRepository;
 import com.scoperetail.fusion.audit.persistence.repository.MessageLogKeyRepository;
 import com.scoperetail.fusion.audit.persistence.repository.MessageLogRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 @Slf4j
-public class CommandImpl implements Command, InitializingBean {
+public class CommandImpl implements Command {
   private final MessageLogRepository messageLogRepository;
   private final MessageLogKeyRepository messageLogKeyRepository;
   private final DedupeKeyRepository dedupeKeyRepository;
@@ -35,11 +35,13 @@ public class CommandImpl implements Command, InitializingBean {
   private static final String MESSAGE_LOG_TABLE_NAME = "message_log";
   private static final String MESSAGE_LOG_KEY_TABLE_NAME = "message_log_key";
   private static final String DEDUPE_KEY_TABLE_NAME = "dedupe_key";
+  private static final String LOG_FILES = "log_files";
 
   @Value("${retentionDuration}")
   private Integer retentionDuration;
-  @Value("${eraser.frequency}")
-  private String frequency;
+
+  @Value("${logsDirectory}")
+  private String logsDirectory;
 
   @Override
   public CommandResult execute(ConfigProperties configProperties, List<Result> resultList) {
@@ -57,7 +59,7 @@ public class CommandImpl implements Command, InitializingBean {
 
   private Boolean purgeAuditorRecords(final ConfigProperties configProperties, final List<Result> eraserData) {
     final Pageable pageable = PageRequest.of(0, configProperties.getBatchSize());
-    final LocalDateTime pivoteDate = LocalDateTime.now().minusDays(retentionDuration); // remove records prior to last 7 days
+    final LocalDateTime pivoteDate = LocalDateTime.now().minusDays(retentionDuration);
     List<String> messageLogKeysToErase = messageLogRepository.findLogKeysToErase(pivoteDate, pageable);
     boolean hasMoreRecords = !messageLogKeysToErase.isEmpty();
     if(hasMoreRecords) {
@@ -68,6 +70,8 @@ public class CommandImpl implements Command, InitializingBean {
       deleteMessageLogKeyRecords(messageLogKeysToErase, eraserData);
       deleteDedupeKeyRecords(messageLogKeysToErase, eraserData);
     }
+    //Also remove log files older than pivoteDate
+    deleteLogFiles(eraserData);
     return hasMoreRecords;
   }
 
@@ -89,6 +93,29 @@ public class CommandImpl implements Command, InitializingBean {
     log.trace("Records deleted for {} table is {}", DEDUPE_KEY_TABLE_NAME, count);
   }
 
+  private void deleteLogFiles(List<Result> eraserData) {
+    Integer count = 0;
+    File directory = new File(logsDirectory);
+    if(directory.exists()) {
+      File[] listFiles = directory.listFiles();
+      long purgeTime = System.currentTimeMillis() - (retentionDuration * 24 * 60 * 60 * 1000);
+      for(File listFile : listFiles) {
+        if(listFile.lastModified() < purgeTime) {
+          if(!listFile.delete()) {
+            log.error("Unable to delete file: {}", listFile);
+          } else {
+            count++;
+            log.trace("Deleted file {}", listFile);
+          }
+        }
+      }
+      eraserData.add(generateResult(count, LOG_FILES));
+      log.trace("Log files deleted for {} table is {}", LOG_FILES, count);
+    } else {
+      log.warn("Files were not deleted, directory {} doesn't exist!", logsDirectory);
+    }
+  }
+
   private Result generateResult(Integer count, String tableName) {
     return Result
         .builder()
@@ -96,11 +123,5 @@ public class CommandImpl implements Command, InitializingBean {
         .target(tableName)
         .operationCode(OperationCode.DELETE)
         .build();
-  }
-
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    log.info("retentionDuration {}", retentionDuration);
-    log.info("frequency {}", frequency);
   }
 }

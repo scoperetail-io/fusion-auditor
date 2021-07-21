@@ -30,3 +30,16 @@ spring:
     show-sql: true
 server:
   port: 9090
+eraser:
+  backOutDuration: 5000
+  batchSize: 25
+  duration: 60
+  flushStatsPerCycle: true
+  flushStatsPerOperation: false
+  frequency: '0 0 4-13,18-23 * * ?'
+  isEnabled: true
+  shedlock:
+    lockAtLeastFor: 1m
+    lockAtMostFor: 10m
+retentionDuration: 15
+logsDirectory: '/tmp/fusion/auditor/'

@@ -36,9 +36,10 @@ eraser:
   duration: 60
   flushStatsPerCycle: true
   flushStatsPerOperation: false
-  frequency: '0 0/2 0 * * ?'
+  frequency: '0 56 16 * * ?'
   isEnabled: true
   shedlock:
     lockAtLeastFor: 1m
     lockAtMostFor: 10m
 retentionDuration: 15
+logsDirectory: '/tmp/fusion/auditor/'
