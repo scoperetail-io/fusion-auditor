@@ -29,6 +29,7 @@
 		<fusion-core.version>0.12</fusion-core.version>
 		<lombok.version>1.18.12</lombok.version>
 		<eraser.version>0.3</eraser.version>
+		<liquibase.version>3.6.1</liquibase.version>
 	</properties>
 
 	<scm>
@@ -79,6 +80,15 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>${liquibase.version}</version>
+				<configuration>
+					<propertyFile>src/main/resources/liquibase/liquibase-maven-plugin.properties</propertyFile>
+					<changeLogFile>src/main/resources/changelog/changelog.xml</changeLogFile>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

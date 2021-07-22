@@ -5,7 +5,6 @@ import com.scoperetail.eraser.processor.Command;
 import com.scoperetail.eraser.processor.CommandResult;
 import com.scoperetail.eraser.properties.ConfigProperties;
 import com.scoperetail.eraser.utility.OperationCode;
-import com.scoperetail.fusion.audit.persistence.repository.DedupeKeyRepository;
 import com.scoperetail.fusion.audit.persistence.repository.MessageLogKeyRepository;
 import com.scoperetail.fusion.audit.persistence.repository.MessageLogRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,19 +22,15 @@ import java.util.List;
 public class CommandImpl implements Command {
   private final MessageLogRepository messageLogRepository;
   private final MessageLogKeyRepository messageLogKeyRepository;
-  private final DedupeKeyRepository dedupeKeyRepository;
 
-  public CommandImpl(MessageLogRepository messageLogRepository, MessageLogKeyRepository messageLogKeyRepository,
-                     DedupeKeyRepository dedupeKeyRepository) {
+  public CommandImpl(MessageLogRepository messageLogRepository, MessageLogKeyRepository messageLogKeyRepository) {
     this.messageLogRepository = messageLogRepository;
     this.messageLogKeyRepository = messageLogKeyRepository;
-    this.dedupeKeyRepository = dedupeKeyRepository;
   }
 
   private static final String MESSAGE_LOG_TABLE_NAME = "message_log";
   private static final String MESSAGE_LOG_KEY_TABLE_NAME = "message_log_key";
-  private static final String DEDUPE_KEY_TABLE_NAME = "dedupe_key";
-  private static final String LOG_FILES = "log_files";
+  private static final String LOG_FILES = "auditor_log_file";
 
   @Value("${retentionDuration}")
   private Integer retentionDuration;
@@ -68,9 +63,8 @@ public class CommandImpl implements Command {
 
       deleteMessageLogRecords(messageLogKeysToErase, eraserData);
       deleteMessageLogKeyRecords(messageLogKeysToErase, eraserData);
-      deleteDedupeKeyRecords(messageLogKeysToErase, eraserData);
     }
-    //Also remove log files older than pivoteDate
+    //Also remove older log files
     deleteLogFiles(eraserData);
     return hasMoreRecords;
   }
@@ -87,18 +81,13 @@ public class CommandImpl implements Command {
     log.trace("Records deleted for {} table is {}", MESSAGE_LOG_KEY_TABLE_NAME, count);
   }
 
-  private void deleteDedupeKeyRecords(List<String> messageLogKeysToErase, List<Result> eraserData) {
-    final Integer count = dedupeKeyRepository.deleteDedupeKey(messageLogKeysToErase);
-    eraserData.add(generateResult(count, DEDUPE_KEY_TABLE_NAME));
-    log.trace("Records deleted for {} table is {}", DEDUPE_KEY_TABLE_NAME, count);
-  }
-
   private void deleteLogFiles(List<Result> eraserData) {
     Integer count = 0;
     File directory = new File(logsDirectory);
     if(directory.exists()) {
       File[] listFiles = directory.listFiles();
       long purgeTime = System.currentTimeMillis() - (retentionDuration * 24 * 60 * 60 * 1000);
+      assert listFiles != null;
       for(File listFile : listFiles) {
         if(listFile.lastModified() < purgeTime) {
           if(!listFile.delete()) {
