@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -64,8 +63,6 @@ public class CommandImpl implements Command {
       deleteMessageLogRecords(messageLogKeysToErase, eraserData);
       deleteMessageLogKeyRecords(messageLogKeysToErase, eraserData);
     }
-    //Also remove older log files
-    deleteLogFiles(eraserData);
     return hasMoreRecords;
   }
 
@@ -79,30 +76,6 @@ public class CommandImpl implements Command {
     final Integer count = messageLogKeyRepository.deleteMessageLogKey(messageLogKeysToErase);
     eraserData.add(generateResult(count, MESSAGE_LOG_KEY_TABLE_NAME));
     log.trace("Records deleted for {} table is {}", MESSAGE_LOG_KEY_TABLE_NAME, count);
-  }
-
-  private void deleteLogFiles(List<Result> eraserData) {
-    Integer count = 0;
-    File directory = new File(logsDirectory);
-    if(directory.exists()) {
-      File[] listFiles = directory.listFiles();
-      long purgeTime = System.currentTimeMillis() - (retentionDuration * 24 * 60 * 60 * 1000);
-      assert listFiles != null;
-      for(File listFile : listFiles) {
-        if(listFile.lastModified() < purgeTime) {
-          if(!listFile.delete()) {
-            log.error("Unable to delete file: {}", listFile);
-          } else {
-            count++;
-            log.trace("Deleted file {}", listFile);
-          }
-        }
-      }
-      eraserData.add(generateResult(count, LOG_FILES));
-      log.trace("Log files deleted for {} table is {}", LOG_FILES, count);
-    } else {
-      log.warn("Files were not deleted, directory {} doesn't exist!", logsDirectory);
-    }
   }
 
   private Result generateResult(Integer count, String tableName) {

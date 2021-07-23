@@ -1,0 +1,128 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+	<changeSet author="JavierRC1" id="initial_db_create">
+		<createTable tableName="message_log">
+			<column name="id" type="BIGINT" autoIncrement="true">
+				<constraints primaryKey="true"
+							 primaryKeyName="pk_message_log"
+							 nullable="false"/>
+			</column>
+			<column name="log_key" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
+			<column name="event_id" type="VARCHAR(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="source_ts" type="TIMESTAMP" />
+			<column name="payload" type="CLOB">
+				<constraints nullable="false" />
+			</column>
+			<column name="status_code" type="VARCHAR(10)">
+				<constraints nullable="false" />
+			</column>
+			<column name="create_ts" type="TIMESTAMP" />
+		</createTable>
+
+		<createTable tableName="message_log_key">
+			<column name="log_key" type="VARCHAR(128)">
+				<constraints primaryKey="true"
+							 primaryKeyName="pk_message_log_key"
+							 nullable="false"/>
+			</column>
+			<column name="k01" type="VARCHAR(32)" />
+			<column name="k02" type="VARCHAR(32)" />
+			<column name="k03" type="VARCHAR(32)" />
+			<column name="k04" type="VARCHAR(32)" />
+			<column name="k05" type="VARCHAR(32)" />
+		</createTable>
+
+		<createTable tableName="message_status">
+			<column name="status_id" type="SMALLINT">
+				<constraints primaryKey="true"
+							 primaryKeyName="pk_message_status"
+							 nullable="false"/>
+			</column>
+			<column name="status_code" type="VARCHAR(15)" />
+			<column name="description" type="VARCHAR(30)" />
+		</createTable>
+
+		<createTable tableName="dedupe_key">
+			<column name="log_key" type="VARCHAR(128)">
+				<constraints primaryKey="true"
+							 primaryKeyName="pk_dedupe_key"
+							 nullable="false"/>
+			</column>
+			<column name="create_ts" type="TIMESTAMP" />
+		</createTable>
+
+		<createTable tableName="event_type">
+			<column name="event_id" type="VARCHAR(8)">
+				<constraints primaryKey="true"
+							 primaryKeyName="pk_event_type"
+							 nullable="false"/>
+			</column>
+			<column name="name" type="VARCHAR(40)" />
+			<column name="description" type="VARCHAR(80)" />
+			<column name="source_id" type="VARCHAR(4)" />
+			<column name="target_id" type="VARCHAR(4)" />
+		</createTable>
+
+		<insert tableName="message_status">
+			<column name="status_id" value="1" />
+			<column name="status_code" value="SUCCESS" />
+			<column name="description" value="Success" />
+		</insert>
+		<insert tableName="message_status">
+			<column name="status_id" value="2" />
+			<column name="status_code" value="APP_ERROR" />
+			<column name="description" value="Application error" />
+		</insert>
+		<insert tableName="message_status">
+			<column name="status_id" value="3" />
+			<column name="status_code" value="SYS_ERROR" />
+			<column name="description" value="System error" />
+		</insert>
+		<insert tableName="message_status">
+			<column name="status_id" value="4" />
+			<column name="status_code" value="INVALID_MESSAGE" />
+			<column name="description" value="Invalid Message" />
+		</insert>
+		<insert tableName="message_status">
+			<column name="status_id" value="5" />
+			<column name="status_code" value="DUPLICATE" />
+			<column name="description" value="Duplicate" />
+		</insert>
+
+		<insert tableName="event_type">
+			<column name="event_id" value="ORDROP" />
+			<column name="name" value="Order Drop" />
+			<column name="description" value="Order Drop Event" />
+		</insert>
+		<insert tableName="event_type">
+			<column name="event_id" value="ORDCANCL" />
+			<column name="name" value="Order Cancel" />
+			<column name="description" value="Order Cancel Event" />
+		</insert>
+		<insert tableName="event_type">
+			<column name="event_id" value="PIKBEGIN" />
+			<column name="name" value="Pick Begin" />
+			<column name="description" value="Pick Begin Event" />
+		</insert>
+		<insert tableName="event_type">
+			<column name="event_id" value="PIKEND" />
+			<column name="name" value="Pick End" />
+			<column name="description" value="Pick End Event" />
+		</insert>
+		<insert tableName="event_type">
+			<column name="event_id" value="ORDINFO" />
+			<column name="name" value="Order Info" />
+			<column name="description" value="Order Info Event" />
+		</insert>
+
+	</changeSet>
+
+</databaseChangeLog>

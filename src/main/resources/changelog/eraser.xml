@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet author="javier" id="statTable">
+    <changeSet author="javierscope" id="createStatTable">
         <createTable tableName="stat">
             <column name="run_id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -15,7 +15,7 @@
             <column name="operation_code" type="SMALLINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="javier" id="operationCodeTable">
+    <changeSet author="javierscope" id="createOperationCodeTable">
         <createTable tableName="operation_code">
             <column name="operation_code_id" type="SMALLINT">
                 <constraints primaryKey="true"/>
@@ -23,20 +23,20 @@
             <column name="operation_code" type="VARCHAR(30)"/>
         </createTable>
     </changeSet>
-    <changeSet author="javier" id="insertOperationCodeData">
+    <changeSet author="javierscope" id="insertOperationCodeData">
         <insert tableName="operation_code">
             <column name="operation_code_id" value="1"/>
             <column name="operation_code" value="DELETE"/>
         </insert>
     </changeSet>
-    <changeSet id="addForeignKeyConstraint" author="javier">
+    <changeSet id="addForeignKeyConstraint" author="javierscope">
         <addForeignKeyConstraint
                 baseColumnNames="operation_code" baseTableName="stat"
                 constraintName="fk_stat_operation_code"
                 referencedColumnNames="operation_code_id"
                 referencedTableName="operation_code"/>
     </changeSet>
-    <changeSet id="shedlockForEraser" author="javier">
+    <changeSet id="createShedlockTableForEraser" author="javierscope">
         <createTable tableName="shedlock">
             <column name="name" type="VARCHAR(64)">
                 <constraints primaryKey="true"

@@ -36,7 +36,7 @@ eraser:
   duration: 60
   flushStatsPerCycle: true
   flushStatsPerOperation: false
-  frequency: '0 0 4-13,18-23 * * ?'
+  frequency: '0 0 22 * * ?'
   isEnabled: true
   shedlock:
     lockAtLeastFor: 1m
