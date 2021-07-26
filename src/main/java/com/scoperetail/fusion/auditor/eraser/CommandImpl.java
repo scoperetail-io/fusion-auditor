@@ -29,7 +29,6 @@ public class CommandImpl implements Command {
 
   private static final String MESSAGE_LOG_TABLE_NAME = "message_log";
   private static final String MESSAGE_LOG_KEY_TABLE_NAME = "message_log_key";
-  private static final String LOG_FILES = "auditor_log_file";
 
   @Value("${retentionDuration}")
   private Integer retentionDuration;

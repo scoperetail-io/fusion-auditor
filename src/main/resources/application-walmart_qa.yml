@@ -42,4 +42,3 @@ eraser:
     lockAtLeastFor: 1m
     lockAtMostFor: 10m
 retentionDuration: 15
-logsDirectory: '/opt/fusion/target/fusion/auditor/'
