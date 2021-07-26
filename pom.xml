@@ -27,6 +27,7 @@
 		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<jackson.dataformat.version>2.9.8</jackson.dataformat.version>
 		<fusion-core.version>0.12</fusion-core.version>
+		<fusion-audit-persistence.version>0.9</fusion-audit-persistence.version>
 		<lombok.version>1.18.12</lombok.version>
 		<eraser.version>0.3</eraser.version>
 		<liquibase.version>3.6.1</liquibase.version>
@@ -44,6 +45,11 @@
 			<groupId>com.scoperetail.fusion</groupId>
 			<artifactId>fusion-core</artifactId>
 			<version>${fusion-core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.scoperetail.fusion</groupId>
+			<artifactId>fusion-audit-persistence</artifactId>
+			<version>${fusion-audit-persistence.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
