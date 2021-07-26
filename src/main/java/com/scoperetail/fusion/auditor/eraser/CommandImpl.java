@@ -33,9 +33,6 @@ public class CommandImpl implements Command {
   @Value("${retentionDuration}")
   private Integer retentionDuration;
 
-  @Value("${logsDirectory}")
-  private String logsDirectory;
-
   @Override
   public CommandResult execute(ConfigProperties configProperties, List<Result> resultList) {
     CommandResult commandResult = CommandResult.STOP;
