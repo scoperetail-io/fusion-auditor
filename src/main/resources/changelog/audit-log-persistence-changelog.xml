@@ -125,4 +125,7 @@
 
 	</changeSet>
 
+	<changeSet author="javierscope" id="dropDedupeTable">
+		<dropTable tableName="dedupe_key" cascadeConstraints="true" />
+	</changeSet>
 </databaseChangeLog>
