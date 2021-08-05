@@ -26,8 +26,11 @@
 		<spotless.version>2.10.0</spotless.version>
 		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<jackson.dataformat.version>2.9.8</jackson.dataformat.version>
-		<fusion-core.version>0.9</fusion-core.version>
+		<fusion-core.version>0.12</fusion-core.version>
+		<fusion-audit-persistence.version>0.9</fusion-audit-persistence.version>
 		<lombok.version>1.18.12</lombok.version>
+		<eraser.version>0.6</eraser.version>
+		<liquibase.version>3.6.1</liquibase.version>
 	</properties>
 
 	<scm>
@@ -44,6 +47,11 @@
 			<version>${fusion-core.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.scoperetail.fusion</groupId>
+			<artifactId>fusion-audit-persistence</artifactId>
+			<version>${fusion-audit-persistence.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
@@ -56,7 +64,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -69,10 +76,24 @@
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.scoperetail</groupId>
+			<artifactId>eraser</artifactId>
+			<version>${eraser.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>${liquibase.version}</version>
+				<configuration>
+					<propertyFile>src/main/resources/liquibase/liquibase-maven-plugin.properties</propertyFile>
+					<changeLogFile>src/main/resources/changelog/changelog.xml</changeLogFile>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

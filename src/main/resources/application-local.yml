@@ -30,3 +30,15 @@ spring:
     show-sql: true
 server:
   port: 9090
+eraser:
+  backOutDuration: 5000
+  batchSize: 25
+  duration: 60
+  flushStatsPerCycle: true
+  flushStatsPerOperation: false
+  frequency: '0 27 10 * * ?'
+  isEnabled: true
+  shedlock:
+    lockAtLeastFor: 1m
+    lockAtMostFor: 10m
+retentionDuration: 15

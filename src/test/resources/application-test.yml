@@ -1,0 +1,164 @@
+fusion:
+  brokers:
+    - channel: NA
+      hostUrl: 'tcp://127.0.0.1:61616'
+      brokerId: fusionBroker
+      jmsProvider: ACTIVEMQ
+      queueManagerName: NA
+      sendSessionCacheSize: 10
+      userName: admin
+  retryPolicies:
+    - policyType: REALTIME
+      maxAttempt: 3
+      backoffMS: 1000
+      type: Fixed
+    - policyType: OFFLINE
+      maxAttempt: 5
+      backoffMS: 2000
+      type: Exponential
+  usecases:
+    - name: OrderDropEvent
+      version: 1
+      activeConfig: adapterConfig
+      hashKeyTemplate: hash_key
+      dedupeCheck: true
+      hashKeyTransformationType: HASH_KEY_FTL_TRANSFORMER
+      configs:
+        - name: adapterConfig
+          adapters:
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: SUCCESS
+              brokerId: fusionBroker
+              queueName: FUSION.ORDER.IN
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: SUCCESS
+              brokerId: fusionBroker
+              queueName: FUSION.AUDIT.IN
+              transformationType: DOMAIN_EVENT_FTL_TRANSFORMER
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: FAILURE
+              brokerId: fusionBroker
+              queueName: FUSION.ORDER.ERROR
+    - name: OrderDropEventReader
+      version: 1
+      activeConfig: adapterConfig
+      configs:
+        - name: adapterConfig
+          adapters:
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: SUCCESS
+              brokerId: fusionBroker
+              queueName: US.FUSION.ALPHA.IN.QUEUE
+              template: PickingSubsystemOrderReleaseMessage
+              transformationType: FTL_TEMPLATE_TRANSFORMER
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: SUCCESS
+              brokerId: fusionBroker
+              queueName: FUSION.AUDIT.IN
+              transformationType: DOMAIN_EVENT_FTL_TRANSFORMER
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: FAILURE
+              brokerId: fusionBroker
+              queueName: US.FUSION.ALPHA.ERROR.QUEUE
+
+    - name: PickBeginEvent
+      version: 1
+      activeConfig: adapterConfig
+      configs:
+        - name: adapterConfig
+          adapters:
+            - adapterType: outbound
+              trasnportType: REST
+              usecaseResult: SUCCESS
+              hostName: httpbin.org
+              port: 443
+              protocol: https
+              methodType: POST
+              uriTemplate: PickBeginEvent_uri
+              requestBodyTemplate: PickingOrderBeginEventMessage_requestBody
+              requestHeaderTemplate: PickBeginEvent_requestHeader
+              templateCustomizer: com.alert.fusion.orchestrator.config.plugins.pickbegin.PickBeginOutboundCustomizer
+              transformationType: FTL_TEMPLATE_TRANSFORMER
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: SUCCESS
+              brokerId: fusionBroker
+              queueName: FUSION.AUDIT.IN
+              transformationType: DOMAIN_EVENT_FTL_TRANSFORMER
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: FAILURE
+              brokerId: fusionBroker
+              queueName: FUSION.PICK.BEGIN.OUTBOUND.ERROR
+
+
+    - name: PickEndEvent
+      version: 1
+      activeConfig: adapterConfig
+      configs:
+        - name: adapterConfig
+          adapters:
+            - adapterType: outbound
+              trasnportType: REST
+              usecaseResult: SUCCESS
+              hostName: httpbin.org
+              port: 443
+              protocol: https
+              methodType: POST
+              uriTemplate: PickEndEvent_uri
+              requestBodyTemplate: PickingSubSystemOrderCompleteMessage_requestBody
+              requestHeaderTemplate: PickEndEvent_requestHeader
+              transformationType: FTL_TEMPLATE_TRANSFORMER
+              templateCustomizer: com.alert.fusion.orchestrator.config.plugins.pickend.PickEndOutboundCustomizer
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: SUCCESS
+              brokerId: fusionBroker
+              queueName: FUSION.AUDIT.IN
+              transformationType: DOMAIN_EVENT_FTL_TRANSFORMER
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: FAILURE
+              brokerId: fusionBroker
+              queueName: FUSION.PICK.END.OUTBOUND.ERROR
+  credentials:
+    hash: 686f7d128bd704d5f6ba8382822884dd01a76e115ab957aad8fcc026c97ed40d
+spring:
+  datasource:
+    platform: H2
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    timeBetweenEvictionRunsMillis: 1000
+    testWhileIdle: true
+  liquibase:
+    enabled: false
+  hikari:
+    connectionTimeout: 30000
+    idleTimeout: 30000
+    maxLifetime: 2000000
+    maximumPoolSize: 20
+    minimumIdle: 5
+    poolName: SpringBootJPAHikariCP
+  jpa:
+    ddl-auto: ''
+    show-sql: true
+eraser:
+  backOutDuration: 5000
+  batchSize: 25
+  duration: 60
+  flushStatsPerCycle: true
+  flushStatsPerOperation: false
+  frequency: '0 40 10 * * ?'
+  isEnabled: true
+  shedlock:
+    lockAtLeastFor: 1m
+    lockAtMostFor: 10m
+retentionDuration: 15
