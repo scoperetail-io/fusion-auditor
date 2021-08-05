@@ -29,7 +29,7 @@
 		<fusion-core.version>0.12</fusion-core.version>
 		<fusion-audit-persistence.version>0.9</fusion-audit-persistence.version>
 		<lombok.version>1.18.12</lombok.version>
-		<eraser.version>0.3</eraser.version>
+		<eraser.version>0.6</eraser.version>
 		<liquibase.version>3.6.1</liquibase.version>
 	</properties>
 
@@ -64,7 +64,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>

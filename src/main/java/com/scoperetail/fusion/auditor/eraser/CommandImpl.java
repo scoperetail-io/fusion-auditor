@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class CommandImpl implements Command {
 
   private Boolean purgeAuditorRecords(final ConfigProperties configProperties, final List<Result> eraserData) {
     final Pageable pageable = PageRequest.of(0, configProperties.getBatchSize());
-    final LocalDateTime pivoteDate = LocalDateTime.now().minusDays(retentionDuration);
+    final LocalDateTime pivoteDate = LocalDate.now().minusDays(retentionDuration).atStartOfDay();
     List<String> messageLogKeysToErase = messageLogRepository.findLogKeysToErase(pivoteDate, pageable);
     boolean hasMoreRecords = !messageLogKeysToErase.isEmpty();
     if(hasMoreRecords) {
@@ -81,5 +82,10 @@ public class CommandImpl implements Command {
         .target(tableName)
         .operationCode(OperationCode.DELETE)
         .build();
+  }
+
+  @Value("${retentionDuration}")
+  void setRetentionDuration(final Integer retentionDuration) {
+    this.retentionDuration  = retentionDuration;
   }
 }
