@@ -128,4 +128,21 @@
 	<changeSet author="javierscope" id="dropDedupeTable">
 		<dropTable tableName="dedupe_key" cascadeConstraints="true" />
 	</changeSet>
+
+	<changeSet author="rzadpide" id="addColumnsToMessageLog">
+		<addColumn tableName="message_log">
+			<column name="transport_type" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="audit_type" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="result" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="outcome" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

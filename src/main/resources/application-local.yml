@@ -7,6 +7,34 @@ fusion:
       queueManagerName: NA
       sendSessionCacheSize: 10
       userName: admin
+      amqpRedeliveryPolicy:
+         backOffMultiplier: 1.0
+         maxDeliveries: 3
+         queueNameRegex: "*"
+         redeliveryDelay: 3000
+         useExponentialBackOff: true
+         maxDeliveryDelay: 3600000
+         initialRedeliveryDelay: 0      
+  usecases:
+    - name: AuditEvent
+      version: 1
+      activeConfig: adapterConfig   
+      configs:
+        - name: adapterConfig
+          adapters:
+            - adapterType: inbound
+              brokerId: fusionBroker
+              queueName: FUSION.AUDIT.IN
+              messageType: JSON
+              readConcurrency: 5-10
+              boBrokerId: fusionBroker
+              boQueueName: FUSION.AUDIT.IN.BO 
+            - adapterType: outbound
+              trasnportType: JMS
+              usecaseResult: FAILURE
+              brokerId: fusionBroker
+              queueName: FUSION.AUDIT.IN.ERROR                       
+    
 spring:
   datasource:
     platform: mariadb
