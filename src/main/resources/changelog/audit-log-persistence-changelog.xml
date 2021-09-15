@@ -145,4 +145,9 @@
 			</column>
 		</addColumn>
 	</changeSet>
+
+	<changeSet author="rzadpide" id="updateDataType">
+		<modifyDataType tableName="message_log"
+			columnName="create_ts" newDataType="TIMESTAMP(6)" />
+	</changeSet>
 </databaseChangeLog>

@@ -38,7 +38,7 @@ import com.scoperetail.fusion.auditor.application.port.out.persistence.AuditorOu
 import com.scoperetail.fusion.auditor.common.DomainEventMapper;
 import com.scoperetail.fusion.shared.kernel.common.annotation.PersistenceAdapter;
 import com.scoperetail.fusion.shared.kernel.events.DomainEvent;
-import com.scoperetail.fusion.shared.kernel.events.Property;
+import com.scoperetail.fusion.shared.kernel.events.DomainProperty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,19 +58,19 @@ public class AuditorPersistenceAdapterJpa implements AuditorOutboundPort {
     messageLogEntity.setStatusCode(1);
     messageLogRepository.save(messageLogEntity);
     log.debug("MessageLogEntity successfully inserted: {}", messageLogEntity);
-    saveMessageLogKeyEntity(domainEvent.getEventId(), domainEvent.getProperties());
+    saveMessageLogKeyEntity(domainEvent.getEventId(), domainEvent.getDomainProperties());
   }
 
   private synchronized void saveMessageLogKeyEntity(
-      final String logKey, final Set<Property> properties) {
+      final String logKey, final Set<DomainProperty> domainProperties) {
     final Optional<MessageLogKeyEntity> optMessageLogKeyEntity =
         messageLogKeyRepository.findById(logKey);
     if (!optMessageLogKeyEntity.isPresent()) {
       final MessageLogKeyEntity msgLogKey = new MessageLogKeyEntity();
       msgLogKey.setLogKey(logKey);
       int i = 1;
-      for (final Property property : properties) {
-        final String value = property.getValue();
+      for (final DomainProperty domainProperty : domainProperties) {
+        final String value = domainProperty.getValue();
         if (i == 1) msgLogKey.setK01(value);
         else if (i == 2) msgLogKey.setK02(value);
         else if (i == 3) msgLogKey.setK03(value);

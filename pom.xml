@@ -17,7 +17,7 @@
 	<url>https://github.com/scoperetail-io/${project.artifactId}</url>
 
 	<properties>
-		<fusion-core.version>0.19</fusion-core.version>
+		<fusion-core.version>0.21</fusion-core.version>
 		<fusion-audit-persistence.version>0.10</fusion-audit-persistence.version>
 		<eraser.version>0.6</eraser.version>
 		<spring.version>2.4.5</spring.version>
