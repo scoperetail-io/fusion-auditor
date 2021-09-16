@@ -18,7 +18,7 @@
 
 	<properties>
 		<fusion-core.version>0.21</fusion-core.version>
-		<fusion-audit-persistence.version>0.10</fusion-audit-persistence.version>
+		<fusion-audit-persistence.version>0.11</fusion-audit-persistence.version>
 		<eraser.version>0.6</eraser.version>
 		<spring.version>2.4.5</spring.version>
 		<jackson.version>2.11.4</jackson.version>
