@@ -1,44 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.5</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<groupId>com.scoperetail.pom</groupId>
+		<artifactId>oss-parent-pom</artifactId>
+		<version>1.6</version>
+		<relativePath />
 	</parent>
-
 	<groupId>com.scoperetail.fusion</groupId>
 	<artifactId>fusion-auditor</artifactId>
 	<version>0.13-SNAPSHOT</version>
-	<name>fusion-auditor</name>
+	<name>${project.artifactId}</name>
 	<description>Audit messages</description>
+	<url>https://github.com/scoperetail-io/${project.artifactId}</url>
 
 	<properties>
-		<java.version>11</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sonar.host.url>http://dev-ops.eastus2.cloudapp.azure.com/sonar/</sonar.host.url>
-		<sonar.login>scoperetail</sonar.login>
-		<sonar.password>scope2020!</sonar.password>
-		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
-		<sonar.language>java</sonar.language>
-		<spotless.version>2.10.0</spotless.version>
-		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
-		<jackson.dataformat.version>2.9.8</jackson.dataformat.version>
-		<fusion-core.version>0.12</fusion-core.version>
-		<fusion-audit-persistence.version>0.9</fusion-audit-persistence.version>
-		<lombok.version>1.18.12</lombok.version>
+		<fusion-core.version>0.21</fusion-core.version>
+		<fusion-audit-persistence.version>0.11</fusion-audit-persistence.version>
 		<eraser.version>0.6</eraser.version>
+		<spring.version>2.4.5</spring.version>
+		<jackson.version>2.11.4</jackson.version>
+		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<liquibase.version>3.6.1</liquibase.version>
 	</properties>
 
 	<scm>
 		<developerConnection>
-			scm:git:git@github.com:scoperetail-io/fusion-auditor.git
-		</developerConnection>
+            scm:git:git@github.com:scoperetail-io/${project.artifactId}.git
+        </developerConnection>
 		<tag>HEAD</tag>
+		<url>https://github.com/scoperetail-io/${project.artifactId}</url>
 	</scm>
+
+	<developers>
+		<developer>
+			<id>SI003</id>
+			<name>Ravi Zadpide</name>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+		<developer>
+			<id>SI002</id>
+			<name>Amit Petkar</name>
+			<roles>
+				<role>Architect</role>
+			</roles>
+		</developer>
+	</developers>
+
 
 	<dependencies>
 		<dependency>
@@ -52,8 +64,14 @@
 			<version>${fusion-audit-persistence.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.scoperetail</groupId>
+			<artifactId>eraser</artifactId>
+			<version>${eraser.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
@@ -64,6 +82,17 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -75,11 +104,6 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.scoperetail</groupId>
-			<artifactId>eraser</artifactId>
-			<version>${eraser.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -94,154 +118,6 @@
 					<changeLogFile>src/main/resources/changelog/changelog.xml</changeLogFile>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<layers>
-						<enabled>true</enabled>
-						<configuration>${project.basedir}/src/layers.xml</configuration>
-					</layers>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
-				<configuration>
-					<scmCommentPrefix>[skip ci]</scmCommentPrefix>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.diffplug.spotless</groupId>
-				<artifactId>spotless-maven-plugin</artifactId>
-				<version>${spotless.version}</version>
-				<configuration>
-					<!-- optional: limit format enforcement to just the files changed by 
-						this feature branch -->
-					<ratchetFrom>origin/master</ratchetFrom>
-					<formats>
-						<!-- you can define as many formats as you want, each is independent -->
-						<format>
-							<!-- define the files to apply to -->
-							<includes>
-								<include>*.md</include>
-								<include>.gitignore</include>
-							</includes>
-							<!-- define the steps to apply to those files -->
-							<trimTrailingWhitespace />
-							<endWithNewline />
-							<indent>
-								<tabs>true</tabs>
-								<spacesPerTab>4</spacesPerTab>
-							</indent>
-						</format>
-					</formats>
-					<!-- define a language-specific format -->
-					<java>
-						<!-- no need to specify files, inferred automatically, but you can 
-							if you want -->
-
-						<!-- apply a specific flavor of google-java-format -->
-						<googleJavaFormat>
-							<version>1.8</version>
-							<style>GOOGLE</style>
-						</googleJavaFormat>
-
-						<!-- make sure every file has the following copyright header. optionally, 
-							Spotless can set copyright years by digging through git history (see "license" 
-							section below) -->
-						<licenseHeader>
-							<content>/* ScopeRetail (C)$YEAR */</content>  <!-- or <file>${basedir}/license-header</file> -->
-						</licenseHeader>
-					</java>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>11</source>
-					<target>11</target>
-					<release>11</release>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${org.mapstruct.version}</version>
-						</path>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>central</id>
-			<name>scope-artifactory-virtual</name>
-			<url>http://scopeartifactory.centralus.cloudapp.azure.com/artifactory/maven-virtual</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>maven-central</id>
-			<name>maven</name>
-			<url>https://repo.maven.apache.org/maven2/</url>
-		</repository>
-		<repository>
-			<id>jcenter-central</id>
-			<name>bintray-plugins</name>
-			<url>https://jcenter.bintray.com</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>central</id>
-			<name>scope-artifactory-releases</name>
-			<url>http://scopeartifactory.centralus.cloudapp.azure.com/artifactory/maven-release</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>scope-artifactory-snapshots</name>
-			<url>http://scopeartifactory.centralus.cloudapp.azure.com/artifactory/maven-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
