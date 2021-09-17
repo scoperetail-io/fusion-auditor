@@ -28,8 +28,10 @@ package com.scoperetail.fusion.auditor.adapter.out.persistence.jpa;
  */
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import com.scoperetail.fusion.audit.persistence.entity.MessageLogEntity;
 import com.scoperetail.fusion.audit.persistence.entity.MessageLogKeyEntity;
 import com.scoperetail.fusion.audit.persistence.repository.MessageLogKeyRepository;
@@ -61,23 +63,20 @@ public class AuditorPersistenceAdapterJpa implements AuditorOutboundPort {
     saveMessageLogKeyEntity(domainEvent.getEventId(), domainEvent.getDomainProperties());
   }
 
-  private synchronized void saveMessageLogKeyEntity(
+  private void saveMessageLogKeyEntity(
       final String logKey, final Set<DomainProperty> domainProperties) {
     final Optional<MessageLogKeyEntity> optMessageLogKeyEntity =
         messageLogKeyRepository.findById(logKey);
     if (!optMessageLogKeyEntity.isPresent()) {
       final MessageLogKeyEntity msgLogKey = new MessageLogKeyEntity();
       msgLogKey.setLogKey(logKey);
-      int i = 1;
-      for (final DomainProperty domainProperty : domainProperties) {
-        final String value = domainProperty.getValue();
-        if (i == 1) msgLogKey.setK01(value);
-        else if (i == 2) msgLogKey.setK02(value);
-        else if (i == 3) msgLogKey.setK03(value);
-        else if (i == 4) msgLogKey.setK04(value);
-        else if (i == 5) msgLogKey.setK05(value);
-        i++;
-      }
+      final TreeSet<DomainProperty> sortedDomainProperties = new TreeSet<>(domainProperties);
+      final Iterator<DomainProperty> iterator = sortedDomainProperties.iterator();
+      msgLogKey.setK01(iterator.hasNext() ? iterator.next().getValue() : null);
+      msgLogKey.setK02(iterator.hasNext() ? iterator.next().getValue() : null);
+      msgLogKey.setK03(iterator.hasNext() ? iterator.next().getValue() : null);
+      msgLogKey.setK04(iterator.hasNext() ? iterator.next().getValue() : null);
+      msgLogKey.setK05(iterator.hasNext() ? iterator.next().getValue() : null);
       messageLogKeyRepository.save(msgLogKey);
       log.debug("MessageLogKeyEntity successfully inserted: {}", msgLogKey);
     }

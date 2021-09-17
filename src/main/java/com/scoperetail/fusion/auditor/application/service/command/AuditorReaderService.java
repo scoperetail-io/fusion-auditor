@@ -31,7 +31,10 @@ import static com.scoperetail.fusion.config.Adapter.UsecaseResult.FAILURE;
  */
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.scoperetail.fusion.auditor.adapter.out.persistence.jpa.AuditorPersistenceAdapterJpa;
 import com.scoperetail.fusion.auditor.application.port.in.command.create.AuditorReaderUseCase;
@@ -54,8 +57,8 @@ public class AuditorReaderService implements AuditorReaderUseCase {
 
   @Override
   public void handleValidationFailure(final String event) {
-    final Optional<Adapter> failureAdapter = getFailuerOutboundAdapter();
-    failureAdapter.ifPresent(adapter -> send(adapter.getBrokerId(), adapter.getQueueName(), event));
+    final List<Adapter> failureAdapters = getFailuerOutboundAdapter();
+    failureAdapters.forEach(adapter -> send(adapter.getBrokerId(), adapter.getQueueName(), event));
   }
 
   @Override
@@ -74,10 +77,18 @@ public class AuditorReaderService implements AuditorReaderUseCase {
         Optional.of((String) message), Optional.of(new TypeReference<DomainEvent>() {}));
   }
 
-  private Optional<Adapter> getFailuerOutboundAdapter() {
+  private List<Adapter> getFailuerOutboundAdapter() {
     final Optional<Config> activeConfig = fusionConfig.getActiveConfig(AuditEvent.name());
-    return activeConfig.flatMap(
-        c ->
-            c.getAdapters().stream().filter(a -> FAILURE.equals(a.getUsecaseResult())).findFirst());
+    List<Adapter> adapters = new ArrayList<>(1);
+    if (activeConfig.isPresent()) {
+      adapters =
+          activeConfig
+              .get()
+              .getAdapters()
+              .stream()
+              .filter(a -> FAILURE.equals(a.getUsecaseResult()))
+              .collect(Collectors.toList());
+    }
+    return adapters;
   }
 }
